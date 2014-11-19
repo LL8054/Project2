@@ -1,0 +1,45 @@
+## Assumes you have downloaded and extracted the data from 
+## https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip
+## and that the extracted files ("summarySCC_PM25.rds" and "Source_Classification_code.rds")
+## are in your R working directory. 
+
+## Answers question 1 by producing a PNG bar plot (Q1.png) to the working directory.  
+## Question 1:
+## Have total emissions from PM2.5 decreased in the United States from 1999 to 2008? 
+## Using the base plotting system, make a plot showing the total PM2.5 emission from all 
+## sources for each of the years 1999, 2002, 2005, and 2008.
+
+## Reads the files into R
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+
+## Subsets NEI data frame into years needed for plot
+y1999 <- subset(NEI, NEI$year == 1999)
+y2002 <- subset(NEI, NEI$year == 2002)
+y2005 <- subset(NEI, NEI$year == 2005)
+y2008 <- subset(NEI, NEI$year == 2008)
+
+## Sums up total PM2.5 emissions per year
+sum1999 <- sum(y1999$Emissions)
+sum2002 <- sum(y2002$Emissions)
+sum2005 <- sum(y2005$Emissions)
+sum2008 <- sum(y2008$Emissions)
+
+## Create data frame with totals from years
+sums <- c(sum1999/1000000, sum2002/1000000, sum2005/1000000, sum2008/1000000)
+sums <- round(sums, digits=2)
+years <- c(1999, 2002, 2005, 2008)
+totalPM2.5 <- data.frame(sums, years)
+colnames(totalPM2.5) <- c("totalPM2.5 (in millions)", "year")
+
+## Plots the graph to PNG file
+png ("Q1.png", width=480, height=480)
+barplot(totalPM2.5$totalPM2.5, names.arg=totalPM2.5$year, main="Total PM2.5, All Sources", 
+        xlab="Year", ylab="PM2.5 (millions)")
+dev.off()
+
+
+
+
+
+
