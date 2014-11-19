@@ -38,9 +38,6 @@ barplot(totalPM2.5$totalPM2.5, names.arg=totalPM2.5$year, main="Total PM2.5, All
         xlab="Year", ylab="PM2.5 (millions)")
 dev.off()
 
-## Yes, PM2.5 levels have decreased from 1999 to 2008. 
-
-
-
+## Yes, PM2.5 levels have decreased from 1999 to 2008.
 
 
