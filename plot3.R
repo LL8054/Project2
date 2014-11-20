@@ -1,0 +1,88 @@
+## Assumes you have downloaded and extracted the data from 
+## https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip
+## and that the extracted files ("summarySCC_PM25.rds" and "Source_Classification_code.rds")
+## are in your R working directory. 
+
+## Answers question 3 by producing a PNG plot (Q3.png) to the working directory.  
+## Question 3:
+## Of the four types of sources indicated by the type (point, nonpoint, onroad, nonroad) variable, 
+## which of these four sources have seen decreases in emissions from 1999–2008 for Baltimore City? 
+## Which have seen increases in emissions from 1999–2008? Use the ggplot2 plotting system to make a 
+## plot answer this question.
+
+## Reads the files into R
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+
+## Subsets NEI data frame into Baltimore City, source type, then year
+NEIs1 <- subset(NEI, NEI$fips == "24510")  ##Baltimore City subset
+
+point <- subset(NEIs1, NEIs1$type == "POINT")
+nonpoint <- subset(NEIs1, NEIs1$type == "NONPOINT")
+onroad <- subset(NEIs1, NEIs1$type == "ON-ROAD")
+nonroad <- subset(NEIs1, NEIs1$type == "NON-ROAD")
+
+point99 <- subset(point, point$year == 1999)
+nonpoint99 <- subset(nonpoint, nonpoint$year == 1999)
+onroad99 <- subset(onroad, onroad$year == 1999)
+nonroad99 <- subset(nonroad, nonroad$year == 1999)
+
+point02 <- subset(point, nonpoint$year == 2002)
+nonpoint02 <- subset(nonpoint, nonpoint$year == 2002)
+onroad02 <- subset(onroad, onroad$year == 2002)
+nonroad02 <- subset(nonroad, nonroad$year == 2002)
+
+point05 <- subset(point, nonpoint$year == 2005)
+nonpoint05 <- subset(nonpoint, nonpoint$year == 2005)
+onroad05 <- subset(onroad, onroad$year == 2005)
+nonroad05 <- subset(nonroad, nonroad$year == 2005)
+
+point08 <- subset(point, nonpoint$year == 2008)
+nonpoint08 <- subset(nonpoint, nonpoint$year == 2008)
+onroad08 <- subset(onroad, onroad$year == 2008)
+nonroad08 <- subset(nonroad, nonroad$year == 2008)
+
+## Sums of PM2.5 emissions per type per year
+point99sum <- sum(point99$Emissions)
+nonpoint99sum <- sum(nonpoint99$Emissions)
+onroad99sum <- sum(onroad99$Emissions)
+nonroad99sum <- sum(nonroad99$Emissions)
+
+point02sum <- sum(point02$Emissions)
+nonpoint02sum <- sum(nonpoint02$Emissions)
+onroad02sum <- sum(onroad02$Emissions)
+nonroad02sum <- sum(nonroad02$Emissions)
+
+point05sum <- sum(point05$Emissions)
+nonpoint05sum <- sum(nonpoint05$Emissions)
+onroad05sum <- sum(onroad05$Emissions)
+nonroad05sum <- sum(nonroad05$Emissions)
+
+point08sum <- sum(point08$Emissions)
+nonpoint08sum <- sum(nonpoint08$Emissions)
+onroad08sum <- sum(onroad08$Emissions)
+nonroad08sum <- sum(nonroad08$Emissions)
+
+## Create data frame with PM2.5 totals from each type for each year
+sums <- c(point99sum, nonpoint99sum, onroad99sum, nonroad99sum, point02sum, nonpoint02sum, onroad02sum, 
+          nonroad02sum, point05sum, nonpoint05sum, onroad05sum, nonroad05sum, point08sum, nonpoint08sum,
+          onroad08sum, nonroad08sum)
+sums <- round(sums, digits=2)
+years <- c(1999, 2002, 2005, 2008)
+data <- data.frame(sums, c("point", "nonpoint", "onroad", "nonroad"), rep(years, each=4))
+colnames(data) <- c("Total PM2.5", "Type", "Year")
+
+## Plots the graph to PNG file
+png ("Q3.png", width=480, height=480)
+plot <- qplot(data$Year, data$Total, color = data$Type) + geom_line() + labs(title = 
+    "PM2.5 Source Types by Year, Baltimore City, MA", x = "Year", y = "PM2.5") + labs(color = "Source Type")
+print(plot)
+dev.off()
+
+## Source types which have increased in PM2.5 Emissions from 1999 - 2008 include: Point.
+## Source types which have decreased in PM2.5 Emissions from 1999 - 2008 include:  Nonpoint, Nonroad, and Onroad.
+
+
+
+
+
