@@ -63,9 +63,6 @@ rownames(data_ordered) = unique(data$Type)
 
 ## Plots the graph to PNG file
 png ("Q4.png", width=480, height=480)
-
-
-#par(mar = c(5.1, 4.1, 4.1, 7.1), xpd = TRUE)
 barplot(data_ordered, col = heat.colors(length(rownames(data_ordered))), 
         main="Total Coal Combustion Related PM2.5 Emissions", xlab="Year", ylab="PM2.5 (per 100,000)")
 legend(title = "Type", "topright", fill = heat.colors(length(rownames(data_ordered))), legend = rownames(data_ordered))
